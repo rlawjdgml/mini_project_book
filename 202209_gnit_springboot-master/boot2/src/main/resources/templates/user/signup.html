@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="fragment/thymeleaf-frag :: head"></head>
+
+<body>
+
+    <div th:replace="fragment/thymeleaf-frag :: header ('회원 가입 페이지')"></div>
+
+    <div class="container-fluid mt-2"> <!-- 회원 가입 양식(form) -->
+        <div class="card">
+            <div class="card-header text-center fw-bold">
+                <div>회원 가입 정보</div>
+            </div>
+            <div class="card-body">
+                <form method="post" th:action="@{/user/signup}">
+                    <div class="mt-2">
+                        <input type="text" class="form-control" name="username"
+                            placeholder="아이디" required autofocus />
+                    </div>
+                    <div class="mt-2">
+                        <input type="password" class="form-control" name="password"
+                            placeholder="비밀번호" required />
+                    </div>
+                    <div class="mt-2">
+                        <input type="email" class="form-control" name="email"
+                            placeholder="abc@def.com" required />
+                    </div>
+                    <div class="mt-2">
+                        <input type="reset" value="취소" class="btn btn-secondary" />
+                        <input type="submit" value="가입" class="btn btn-success" />
+                    </div>
+                </form>
+            </div> <!-- card-body -->
+        </div> <!-- card -->
+    </div> <!-- container -->
+    
+    <div th:replace="fragment/thymeleaf-frag :: bootstrap-js"></div>
+</body>
+</html>

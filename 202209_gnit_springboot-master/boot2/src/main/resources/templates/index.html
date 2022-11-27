@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <!-- templates/fragment/thymeleaf-frag.html 안에서 head 프래그먼트를 삽입 -->
+    <head th:insert="fragment/thymeleaf-frag :: head"></head>
+    
+    <body>
+        <div th:replace="fragment/thymeleaf-frag :: header ('포스트 목록 페이지')"></div>
+        
+        <div class="container-fluid mt-3">
+            <nav> 
+                <!-- 로그인한 사용자에게 보여 줄 메뉴: 로그아웃 -->
+                <div class="my-2" sec:authorize="isAuthenticated()">
+                    <span sec:authentication="name">로그인 사용자 이름</span>
+                    <a th:href="@{/logout}" class="btn btn-light">로그아웃</a>
+                </div>
+                <!-- 로그인하지 않은 사용자에게 보여 줄 메뉴: 로그인, 회원 가입 -->
+                <div class="my-2" sec:authorize="isAnonymous()">
+                    <a th:href="@{/login}" class="btn btn-info">로그인</a>
+                    <a th:href="@{/user/signup}" class="btn btn-info">회원 가입</a>
+                </div>
+                <a th:href="@{/post/create}" class="btn btn-primary">새 글 작성</a>
+            </nav>
+            
+            <div class="mt-2"> <!-- 검색 UI -->
+                <form th:action="@{/post/search}" method="get">
+                    <select name="type">
+                        <option value="t">제목</option>
+                        <option value="c">내용</option>
+                        <option value="a">작성자</option>
+                    </select>
+                    <input type="text" name="keyword" placeholder="검색어" required />
+                    <input type="submit" value="검색" />
+                </form>
+            </div>
+            
+            <div class="mt-2">
+                <table class="table table-striped table-hover">
+                    <thead> <!-- table header -->
+                        <tr> <!-- table row -->
+                            <th>번호</th> <!-- table cell header: 컬럼 이름 -->
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>수정시간</th>
+                        </tr>
+                    </thead>
+                    <tbody> <!-- table body -->
+                        <tr th:each="post : ${postList}"> <!-- thymeleaf 반복문 -->
+                            <td th:text="${post.id}">ID</td> <!-- table cell data -->
+                            <td>
+                                <!-- /post/read/123 -->
+                                <a th:href="@{/post/read/{id}(id=${post.id})}"
+                                    th:text="${post.title}">TITLE</a>
+                            </td>
+                            <td th:text="${post.author}">AUTHOR</td>
+                            <td th:text="${post.modifiedTime}">MODIFIED TIME</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div th:replace="fragment/thymeleaf-frag :: bootstrap-js"></div>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head th:insert="fragment/thymeleaf-frag :: head"></head>
+
+    <body>
+        <div th:replace="fragment/thymeleaf-frag :: header ('포스트 상세 보기 페이지')"></div>
+        
+        <div class="container-fluid mt-3">
+            <nav>
+                <!-- 로그인한 사용자에게 보여 줄 메뉴: 로그아웃 -->
+                <div class="my-2" sec:authorize="isAuthenticated()">
+                    <span sec:authentication="name">로그인 사용자 이름</span>
+                    <a th:href="@{/logout}" class="btn btn-light">로그아웃</a>
+                </div>
+                <a th:href="@{/}" class="btn btn-secondary">포스트 목록</a>
+                
+                <!-- 로그인 아이디와 작성자 아이디가 일치할 때에만 보여줌. -->
+                <span th:if="${#authentication.name} == ${post.author}">
+                    <a th:href="@{/post/modify/{id}(id=${post.id})}" class="btn btn-info">수정</a>
+                </span>
+            </nav>
+        
+            <div class="mt-4">
+                <form>
+                    <div>
+                        <label for="id" class="form-label">번호</label>
+                        <input id="id" type="text" class="form-control" th:value="${post.id}" readonly />
+                    </div>
+                    <div>
+                        <label for="title" class="form-label">제목</label>
+                        <input id="title" type="text" class="form-control" th:value="${post.title}" readonly />
+                    </div>
+                    <div>
+                        <label for="content" class="form-label">내용</label>
+                        <textarea id="content" class="form-control" 
+                            th:text="${post.content}" readonly></textarea>
+                    </div>
+                    <div>
+                        <label for="author" class="form-label">작성자</label>
+                        <input id="author" type="text" class="form-control" th:value="${post.author}" readonly />
+                    </div>
+                    <div>
+                        <label for="createdTime" class="form-label">작성 시간</label>
+                        <input id="createdTime" type="text" class="form-control" th:value="${post.createdTime}" readonly />
+                    </div>
+                    <div>
+                        <label for="modifiedTime" class="form-label">수정 시간</label>
+                        <input id="modifiedTime" type="text" class="form-control" th:value="${post.modifiedTime}" readonly />
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+        
+        <div th:replace="fragment/thymeleaf-frag :: bootstrap-js"></div>
+    </body>
+</html>

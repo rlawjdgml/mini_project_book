@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Spring</title>
+</head>
+<body>
+
+    <h1>로그인 결과 페이지</h1>
+    <p>
+    아이디: <span th:text="${userId}"></span>
+    </p>
+    <p>
+    비밀번호: <span th:text="${pwd}"></span>
+    </p>
+    
+    <h1>로그인 DTO 결과</h1>
+    <p th:text="${dto}"></p>
+    
+
+</body>
+</html>

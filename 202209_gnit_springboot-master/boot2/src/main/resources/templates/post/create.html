@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:insert="fragment/thymeleaf-frag :: head"></head>
+<body>
+    <div th:replace="fragment/thymeleaf-frag :: header('새 글 작성 페이지')"></div>
+    
+    <div class="container-fluid mt-3">
+        <nav>
+            <!-- 로그인한 사용자에게 보여 줄 메뉴: 로그아웃 -->
+            <div class="my-2" sec:authorize="isAuthenticated()">
+                <span sec:authentication="name">로그인 사용자 이름</span>
+                <a th:href="@{/logout}" class="btn btn-light">로그아웃</a>
+            </div>
+            <a th:href="@{/}" class="btn btn-secondary">목록 페이지</a>
+        </nav>
+        
+        <div class="mt-3">
+            <form>
+                <div class="mb-3">
+                    <label class="form-label" for="title">제목</label>
+                    <input class="form-control" type="text" 
+                        id="title" name="title" required autofocus />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="content">내용</label>
+                    <textarea class="form-control" id="content" name="content" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="author">작성자</label>
+                    <input class="form-control" type="text" id="author" name="author" 
+                        th:value="${#authentication.name}" readonly />
+                </div>
+            </form>
+            <div>
+                <a id="btnRegister" class="btn btn-success">작성 완료</a>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="fragment/thymeleaf-frag :: bootstrap-js"></div>
+    <div th:replace="fragment/thymeleaf-frag :: jquery-js"></div>
+    <!-- 개발자 작성 자바스립트 -->
+    <script>
+    // id="btnRegister"인 HTML element(<a></a>)를 찾고, click 이벤트 리스너를 등록
+    $('#btnRegister').click(function() {
+        // 입력 창(input, textarea)에 입력된 내용(값)을 읽음.
+        // JavaScript에서 변수 선언: const varname = value; let varname = value;
+        const title = $('#title').val();
+        const content = $('#content').val();
+        const author = $('#author').val();
+        
+        // 입력 창에 빈 값은 없는 지를 검사
+        if (title == '' || content == '' || author == '') {
+            alert('제목, 내용, 작성자는 반드시 입력해야 합니다.');
+            return; // 함수 종료
+        }
+        
+        // Ajax(Asynchronous JavaScript And XML, 비동기 전송 방식) 요청에서 사용할 데이터
+        // JavaScript Object(객체): { propertyName: value, ... }
+        const data = {
+            title: title,
+            content: content,
+            author: author
+        };
+        console.log(data); // 웹 브라우저 개발자 도구의 콘솔 창에 로그 출력.
+        
+        // Ajax(Asynchronous JavaScript And XML) 요청을 서버로 보냄.
+        $.ajax({
+            // Ajax 요청 주소.
+            url: '/api/post',
+            // Ajax 요청 방식(GET-read, POST-create, PUT-update, DELETE-delete).
+            method: 'POST',
+            // 요청 파라미터의 컨텐트 타입(UTF-8로 인코딩된 JSON 문자열 전송).
+            contentType: 'application/json; charset=UTF-8',
+            // 요청 패킷(HTTP packet)에 포함시켜서 서버로 전송하는 데이터.
+            data: JSON.stringify(data), // JavaScript 객체(data)를 JSON 형식의 문자열로 변환.
+            // Ajax 요청에 대해서 서버로 부터 성공 응답이 왔을 때 실행될 콜백(callback) 함수를 정의.
+            success: function(data) {
+                alert(data + '번 포스트 작성 성공!');
+                location.href = '/'; // 메인 페이지(http://localhost:8080/)로 이동.
+            },
+            // Ajax 요청에 대해서 서버로 부터 실패 응답이 왔을 때 실행될 콜백 함수를 정의.
+            error: function(err) {
+                alert(err);
+            }
+        });
+    });
+    </script>
+    
+</body>
+</html>
